@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Community Event Portal</title>
+  <link rel="stylesheet" href="module1.css">
+
+</head>
+<body onload="loadPreference()">
+
+  <nav>
+    <a href="#home">Home</a>
+    <a href="#events">Events</a>
+    <a href="#contact">Contact</a>
+    <a href="help.html" target="_blank">Help</a>
+  </nav>
+
+  <main id="home">
+  
+    <div id="welcomeBanner">
+      <h2>Welcome to the Community Event Portal</h2>
+      <p><span style="color:red; font-weight:bold;">Special Offer!</span></p>
+      <p class="highlight">Join exciting events happening near you!</p>
+    </div>
+
+    <section id="events">
+      <h3>📸 Past Event Gallery</h3>
+      <table>
+        <caption><strong>Community Memories</strong></caption>
+        <tr>
+          <td><img src="event1.jpg" alt="Event 1" ondblclick="enlargeImage(this)"></td>
+          <td><img src="event2.jpg" alt="Event 2" ondblclick="enlargeImage(this)"></td>
+          <td><img src="event3.jpg" alt="Event 3" ondblclick="enlargeImage(this)"></td>
+        </tr>
+        <tr>
+          <td><img src="event4.jpg" alt="Event 4" ondblclick="enlargeImage(this)"></td>
+          <td><img src="event5.jpg" alt="Event 5" ondblclick="enlargeImage(this)"></td>
+          <td><img src="event6.jpg" alt="Event 6" ondblclick="enlargeImage(this)"></td>
+        </tr>
+      </table>
+    </section>
+
+    <section>
+      <h3>📝 Event Registration</h3>
+      <form onsubmit="showConfirmation(); return false;">
+        <label>Name:</label>
+        <input type="text" placeholder="Your name" required autofocus>
+
+        <label>Email:</label>
+        <input type="email" placeholder="Your email" required>
+
+        <label>Date:</label>
+        <input type="date" required>
+
+        <label>Event Type:</label>
+        <select id="eventType" onchange="showFee(); savePreference()" required>
+          <option value="">Choose</option>
+          <option value="Music">Music</option>
+          <option value="Sports">Sports</option>
+        </select>
+        <p id="fee" class="highlight"></p>
+
+        <label>Message:</label>
+        <textarea rows="3" placeholder="Your message"></textarea>
+
+        <label>Phone:</label>
+        <input type="text" id="phone" onblur="validatePhone()" placeholder="10-digit number">
+
+        <input type="submit" value="Register">
+        <br><br>
+        <output id="output"></output>
+      </form>
+    </section>
+
+    <section>
+      <h3>💬 Feedback</h3>
+      <textarea id="feedback" rows="3" placeholder="Your feedback..." onkeyup="countChars()"></textarea>
+      <p id="charCount">0 characters</p>
+      <button onclick="clearPreferences()">Clear Preferences</button>
+    </section>
+
+    <section>
+      <h3>🎥 Promo Video</h3>
+      <video controls oncanplay="videoReady()">
+        <source src="promo.mp4" type="video/mp4">
+        Your browser doesn't support video.
+      </video>
+    </section>
+
+    <section>
+      <h3>📍 Find Nearby Events</h3>
+      <button onclick="getLocation()">Find Location</button>
+      <p id="location"></p>
+    </section>
+
+   
+    <section id="contact">
+      <h3>📬 Contact Us</h3>
+      <p>Email: events@community.org</p>
+    </section>
+  </main>
+
+  
+  <footer>
+    &copy; 2025 Community Events Portal
+  </footer>
+
+  <script>
+    function showConfirmation() {
+      document.getElementById("output").value = "Thanks for registering!";
+    }
+
+    function validatePhone() {
+      const phone = document.getElementById("phone").value;
+      if (!/^\d{10}$/.test(phone)) {
+        alert("Phone must be 10 digits");
+      }
+    }
+
+    function showFee() {
+      const type = document.getElementById("eventType").value;
+      document.getElementById("fee").innerText = (type === "Music") ? "Fee: $10" : "Fee: $5";
+    }
+
+    function enlargeImage(img) {
+      img.style.width = "200px";
+    }
+
+    function countChars() {
+      let text = document.getElementById("feedback").value.length;
+      document.getElementById("charCount").innerText = text + " characters";
+    }
+
+    function videoReady() {
+      alert("Video ready to play!");
+    }
+
+    window.onbeforeunload = function() {
+      return "Do you want to leave this page?";
+    };
+
+    function savePreference() {
+      let type = document.getElementById("eventType").value;
+      localStorage.setItem("preferred", type);
+    }
+
+    function loadPreference() {
+      let type = localStorage.getItem("preferred");
+      if (type) {
+        document.getElementById("eventType").value = type;
+        showFee();
+      }
+    }
+
+    function clearPreferences() {
+      localStorage.clear();
+      sessionStorage.clear();
+      alert("Preferences cleared.");
+    }
+
+    function getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition, showError);
+      } else {
+        document.getElementById("location").innerText = "Geolocation not supported.";
+      }
+    }
+
+    function showPosition(position) {
+      document.getElementById("location").innerText =
+        "Latitude: " + position.coords.latitude + ", Longitude: " + position.coords.longitude;
+    }
+
+    function showError(error) {
+      document.getElementById("location").innerText = "Error: " + error.message;
+    }
+  </script>
+<script src="module1.js"></script>
+</body>
+</html>
